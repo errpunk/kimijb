@@ -1,0 +1,33 @@
+<idea-plugin>
+    <id>com.github.kimijb</id>
+    <name>kimijb</name>
+    <vendor>kimijb</vendor>
+    <description><![CDATA[
+        <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
+        <ul>
+            <li>Provides a dedicated <b>Kimi</b> tool window for daily coding workflows.</li>
+            <li>Supports <b>Option+K</b> (macOS) to inject <code>filePath:lineNumber</code> from the active editor.</li>
+            <li>Uses PTY-based terminal integration for reliable Enter/Backspace and interactive behavior.</li>
+        </ul>
+        <p><b>Requirements:</b> local <code>kimi-cli</code> installation (for example, <code>kimi --version</code> works in your shell).</p>
+        <p><b>Compatibility:</b> JetBrains 2024.3+ (GoLand-focused).</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Kimi"
+                    anchor="right"
+                    factoryClass="com.github.kimijb.ui.KimiToolWindowFactory"/>
+    </extensions>
+
+    <actions>
+        <action id="com.github.kimijb.InsertContext"
+                class="com.github.kimijb.action.KimiInsertContextAction"
+                text="Insert Kimi Context"
+                description="Insert current file path and cursor line into Kimi panel">
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt K"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt K"/>
+        </action>
+    </actions>
+</idea-plugin>

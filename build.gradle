@@ -1,0 +1,61 @@
+plugins {
+    id 'org.jetbrains.intellij.platform' version '2.11.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.2.0'
+}
+
+group = 'com.github.kimijb'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        goland('2024.3.5')
+        bundledPlugin 'org.jetbrains.plugins.terminal'
+        instrumentationTools()
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE)
+    }
+    testImplementation 'io.mockk:mockk:1.13.10'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        id = 'com.github.kimijb'
+        name = 'kimijb'
+        version = '0.0.1'
+        description = '''
+            <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
+            <ul>
+                <li>Provides a dedicated <b>Kimi</b> tool window for daily coding workflows.</li>
+                <li>Supports <b>Option+K</b> (macOS) to inject <code>filePath:lineNumber</code> from the active editor.</li>
+                <li>Uses PTY-based terminal integration for reliable Enter/Backspace and interactive behavior.</li>
+            </ul>
+            <p><b>Requirements:</b> local <code>kimi-cli</code> installation (for example, <code>kimi --version</code> works in your shell).</p>
+            <p><b>Compatibility:</b> JetBrains 2024.3+ (GoLand-focused).</p>
+        '''.stripIndent().trim()
+        ideaVersion {
+            sinceBuild = '243'
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}

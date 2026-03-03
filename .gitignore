@@ -1,0 +1,26 @@
+# Build artifacts
+build/
+out/
+
+# Gradle caches
+.gradle/
+
+# IntelliJ/JetBrains runtime artifacts
+.intellijPlatform/
+.kotlin/
+.idea/
+*.iml
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local environment files
+.env
+.env.*
+local.properties
+
+# Logs
+*.log
