@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    tags-ignore:
+      - "*"
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check WIP marker
+        id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHOULD_RUN=true
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            if jq -r '.head_commit.message, (.commits[]?.message // empty)' "$GITHUB_EVENT_PATH" | grep -Eiq 'wip:'; then
+              SHOULD_RUN=false
+            fi
+          elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            TITLE="$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")"
+            if echo "$TITLE" | grep -Eiq 'wip:'; then
+              SHOULD_RUN=false
+            fi
+          fi
+
+          echo "should_run=$SHOULD_RUN" >> "$GITHUB_OUTPUT"
+          echo "should_run=$SHOULD_RUN"
+
+  build-and-verify:
+    needs: guard
+    if: needs.guard.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run tests
+        run: ./gradlew --no-daemon test
+
+      - name: Verify project configuration
+        run: ./gradlew --no-daemon verifyPluginProjectConfiguration
+
+      - name: Run plugin verifier
+        run: ./gradlew --no-daemon verifyPlugin
+
+      - name: Build plugin ZIP
+        run: ./gradlew --no-daemon buildPlugin
+
+      - name: Upload plugin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-distributions
+          path: build/distributions/*.zip
