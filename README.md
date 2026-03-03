@@ -77,6 +77,8 @@ Output:
   [docs/open-source-cleanup.md](./docs/open-source-cleanup.md)
 - Project lessons learned:
   [docs/lessons-learned.md](./docs/lessons-learned.md)
+- Release guide:
+  [docs/release.md](./docs/release.md)
 
 ## Contributing
 
