@@ -34,12 +34,12 @@ jobs:
         run: |
           set -euo pipefail
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          if [[ ! "$TAG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)?$ ]]; then
+          if ! echo "$TAG_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)?$'; then
             echo "Tag must look like v0.0.1 (or include a suffix). Got: ${GITHUB_REF_NAME}"
             exit 1
           fi
 
-          PROJECT_VERSION="$(grep -E \"^version = '\" build.gradle | head -1 | sed -E \"s/version = '([^']+)'/\\1/\")"
+          PROJECT_VERSION="$(awk -F"'" '/^version = / {print $2; exit}' build.gradle)"
           if [[ -z "$PROJECT_VERSION" ]]; then
             echo "Cannot read version from build.gradle"
             exit 1
