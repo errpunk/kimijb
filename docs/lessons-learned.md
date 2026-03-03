@@ -12,3 +12,11 @@ Final policy adopted for this repository:
 4. Treat one-off setup explorations as historical notes, not long-term implementation.
 
 This preserves maintainability while keeping operational knowledge available.
+
+## Terminal Theme Consistency
+
+When embedding terminal UI in a JetBrains plugin, prefer `com.intellij.terminal.JBTerminalWidget` with `org.jetbrains.plugins.terminal.JBTerminalSystemSettingsProvider`. This path aligns with IDE terminal behavior and theme colors more reliably than constructing raw `JediTermWidget` directly.
+
+Keep a safe fallback (`JediTermWidget` + `DefaultSettingsProvider`) for headless/unit-test contexts where full IDE application services may be unavailable.
+
+If runtime code references classes from bundled JetBrains plugins (for example `org.jetbrains.plugins.terminal`), declare matching `<depends>` entries in `META-INF/plugin.xml`. Gradle `bundledPlugin` alone is not enough for plugin classloader resolution at runtime.

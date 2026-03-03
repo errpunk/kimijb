@@ -1,6 +1,7 @@
 package com.github.kimijb.ui
 
 import com.github.kimijb.terminal.KimiProcessManager
+import com.intellij.terminal.JBTerminalWidget
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
@@ -8,6 +9,7 @@ import com.jediterm.terminal.ProcessTtyConnector
 import com.jediterm.terminal.TtyConnector
 import com.jediterm.terminal.ui.JediTermWidget
 import com.jediterm.terminal.ui.settings.DefaultSettingsProvider
+import org.jetbrains.plugins.terminal.JBTerminalSystemSettingsProvider
 import java.awt.BorderLayout
 import java.nio.charset.StandardCharsets
 import javax.swing.JComponent
@@ -23,15 +25,24 @@ class KimiTerminalPanel(private val project: Project) : Disposable {
     fun createComponent(): JComponent {
         val panel = JPanel(BorderLayout())
 
-        // Create JediTerm widget with proper constructor
-        terminalWidget = JediTermWidget(
-            80,  // columns
-            24,  // rows
-            DefaultSettingsProvider()
-        )
+        // Prefer JetBrains terminal widget to inherit IDE terminal theme behavior.
+        terminalWidget = createTerminalWidget()
         panel.add(terminalWidget, BorderLayout.CENTER)
 
         return panel
+    }
+
+    internal fun createTerminalWidget(): JediTermWidget {
+        return try {
+            JBTerminalWidget(project, JBTerminalSystemSettingsProvider(), this)
+        } catch (t: Throwable) {
+            LOG.warn("Falling back to default JediTerm widget", t)
+            JediTermWidget(
+                80,
+                24,
+                DefaultSettingsProvider()
+            )
+        }
     }
 
     fun startProcess(workDir: String) {
@@ -57,8 +68,12 @@ class KimiTerminalPanel(private val project: Project) : Disposable {
             val ttyConnector = createTtyConnector(process.process)
             currentTtyConnector = ttyConnector
 
-            terminalWidget.setTtyConnector(ttyConnector)
-            terminalWidget.start()
+            if (terminalWidget is JBTerminalWidget) {
+                (terminalWidget as JBTerminalWidget).start(ttyConnector)
+            } else {
+                terminalWidget.setTtyConnector(ttyConnector)
+                terminalWidget.start()
+            }
 
             LOG.info("Terminal started with kimi")
 

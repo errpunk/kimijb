@@ -29,4 +29,10 @@ class KimiTerminalPanelTest {
         // Terminal should be initialized
         assertNotNull(panel)
     }
+
+    @Test
+    fun `create terminal widget returns non-null widget`() {
+        val terminalWidget = panel.createTerminalWidget()
+        assertNotNull(terminalWidget)
+    }
 }
