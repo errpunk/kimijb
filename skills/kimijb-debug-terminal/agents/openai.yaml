@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Kimijb Terminal Debug
+  short_description: Diagnose and fix embedded terminal startup and I/O issues.
+  default_prompt: Debug kimijb terminal problems while preserving PTY startup, ProcessTtyConnector, and PATH merge behavior.

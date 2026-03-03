@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Kimijb Shortcut Action
+  short_description: Maintain Option+K context injection and action wiring.
+  default_prompt: Update kimijb shortcut behavior and plugin action registration with test-first, minimal changes.

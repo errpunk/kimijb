@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Kimijb Release
+  short_description: Prepare, validate, and package kimijb releases.
+  default_prompt: Execute a conservative kimijb release workflow, including version updates, tests, and plugin packaging.

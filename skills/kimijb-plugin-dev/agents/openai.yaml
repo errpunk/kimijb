@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Kimijb Plugin Dev
+  short_description: Implement and validate changes for the kimijb JetBrains plugin.
+  default_prompt: Maintain the kimijb plugin with minimal, test-first changes while preserving PTY terminal behavior and Option+K context injection.
