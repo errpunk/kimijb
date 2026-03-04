@@ -55,7 +55,7 @@ class ContextExtractorTest {
 
     @Test
     fun `formatContextText with both values formats as filepath colon line`() {
-        assertEquals("a/b.go:10", ContextExtractor.formatContextText("a/b.go", 10))
+        assertEquals("@a/b.go:10", ContextExtractor.formatContextText("a/b.go", 10))
     }
 
     @Test
@@ -65,7 +65,7 @@ class ContextExtractorTest {
 
     @Test
     fun `formatContextText with null lineNumber returns filepath only`() {
-        assertEquals("a/b.go", ContextExtractor.formatContextText("a/b.go", null))
+        assertEquals("@a/b.go", ContextExtractor.formatContextText("a/b.go", null))
     }
 
     @Test
@@ -75,6 +75,6 @@ class ContextExtractorTest {
 
     @Test
     fun `formatContextText with path containing spaces`() {
-        assertEquals("/a/my file.go:3", ContextExtractor.formatContextText("/a/my file.go", 3))
+        assertEquals("@/a/my file.go:3", ContextExtractor.formatContextText("/a/my file.go", 3))
     }
 }

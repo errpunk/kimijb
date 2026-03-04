@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.github.kimijb</id>
-    <name>kimijb</name>
+    <name>Kimi JB</name>
     <vendor>kimijb</vendor>
     <description><![CDATA[
         <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
@@ -19,6 +19,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Kimi"
                     anchor="right"
+                    icon="/icons/kimiToolWindow.svg"
                     factoryClass="com.github.kimijb.ui.KimiToolWindowFactory"/>
     </extensions>
 

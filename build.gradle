@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.github.kimijb'
-version = '0.0.2'
+version = '0.0.3'
 
 repositories {
     mavenCentral()
@@ -28,8 +28,8 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         id = 'com.github.kimijb'
-        name = 'kimijb'
-        version = '0.0.2'
+        name = 'Kimi JB'
+        version = '0.0.3'
         description = '''
             <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
             <ul>

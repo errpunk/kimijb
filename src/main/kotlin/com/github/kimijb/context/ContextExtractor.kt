@@ -15,6 +15,6 @@ object ContextExtractor {
 
     fun formatContextText(filePath: String?, lineNumber: Int?): String {
         if (filePath == null) return ""
-        return if (lineNumber != null) "$filePath:$lineNumber" else filePath
+        return if (lineNumber != null) "@$filePath:$lineNumber" else "@$filePath"
     }
 }

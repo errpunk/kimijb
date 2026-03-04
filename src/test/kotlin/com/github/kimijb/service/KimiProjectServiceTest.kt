@@ -43,7 +43,7 @@ class KimiProjectServiceTest {
     fun `insertContext calls setInputText when panel registered`() {
         service.registerPanel(mockPanel)
         service.insertContext("a.go", 5)
-        verify { mockPanel.setInputText("a.go:5") }
+        verify { mockPanel.setInputText("@a.go:5") }
     }
 
     @Test
