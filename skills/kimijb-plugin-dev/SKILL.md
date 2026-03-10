@@ -19,8 +19,9 @@ Workflow:
 8. Run `./gradlew test` after every coding change. Do not hand off with failing tests.
 9. Run `./gradlew buildPlugin` when packaging, installability, or release confidence matters.
 10. Merge finished work back into `main` only after tests are green and the branch is ready to release or integrate.
-11. If the task changes a stable engineering rule or tooling lesson, update `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` in the same task.
-12. If the task affects release content, update `/Users/liutao/workspace/kimijb/CHANGELOG.md` and keep release notes user-facing rather than implementation-heavy.
+11. Use rebase merge when integrating a branch into `main`. Do not use squash merge or merge commits unless the user explicitly overrides that rule for a specific case.
+12. If the task changes a stable engineering rule or tooling lesson, update `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` in the same task.
+13. If the task affects release content, update `/Users/liutao/workspace/kimijb/CHANGELOG.md` and keep release notes user-facing rather than implementation-heavy.
 
 TDD expectation:
 
@@ -33,6 +34,7 @@ Code management expectation:
 - Keep `main` stable and releaseable. Do not treat it as the scratch branch for ongoing development.
 - Protect `main` in the remote repository and require branch-based integration.
 - Do daily feature work on short-lived task branches, then merge back into `main` after review and validation.
+- Default to rebase merge for branch integration so history stays linear without squash rewriting.
 - Keep commits focused so merge history stays understandable for release and rollback decisions.
 
 Respect these invariants:

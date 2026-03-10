@@ -101,3 +101,4 @@ Record format:
 - 2026-03-03: User prefers conservative versioning and requested `0.0.x` starting point (source: explicit request to use `0.0.1`).
 - 2026-03-10: User wants changelog / change-notes written for ordinary users, not implementation-heavy release notes (source: explicit request).
 - 2026-03-10: User wants `main` treated as the protected release branch, with day-to-day development on short-lived branches that merge back into `main` (source: explicit request).
+- 2026-03-10: User wants branch integration into `main` to default to rebase merge rather than squash merge or merge commits (source: explicit request).
