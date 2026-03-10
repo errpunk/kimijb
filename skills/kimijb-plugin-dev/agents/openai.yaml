@@ -1,5 +1,5 @@
 version: 1
 interface:
   display_name: Kimijb Plugin Dev
-  short_description: Implement and validate changes for the kimijb JetBrains plugin.
-  default_prompt: Maintain the kimijb plugin with minimal, test-first changes while preserving PTY terminal behavior and Option+K context injection.
+  short_description: Follow the standard workflow for developing, testing, and releasing the kimijb plugin.
+  default_prompt: Develop the kimijb plugin with the repository's standard workflow, keeping changes minimal, test-first, and compatible with PTY terminal behavior, Option+K context injection, and user-facing release quality.
