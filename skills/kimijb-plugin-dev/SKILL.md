@@ -10,18 +10,21 @@ Use this as the default project workflow.
 Workflow:
 
 1. Read `/Users/liutao/workspace/kimijb/AGENTS.md` and `/Users/liutao/workspace/kimijb/README.md` before changing code.
-2. For any non-trivial task, read `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` before choosing an implementation.
-3. Start development on a dedicated branch instead of working directly on `main`. Treat `main` as the protected release branch.
-4. Name development branches clearly for the task. If Codex creates the branch itself, use the required `codex/` prefix.
-5. Find the smallest change that solves the user request without widening scope.
-6. Use TDD as the default development method. When behavior changes, add or update tests first, make them fail for the intended reason, then implement until they pass.
-7. Implement in small steps and preserve existing plugin goals unless the user explicitly changes them.
-8. Run `./gradlew test` after every coding change. Do not hand off with failing tests.
-9. Run `./gradlew buildPlugin` when packaging, installability, or release confidence matters.
-10. Merge finished work back into `main` only after tests are green and the branch is ready to release or integrate.
-11. Use rebase merge when integrating a branch into `main`. Do not use squash merge or merge commits unless the user explicitly overrides that rule for a specific case.
-12. If the task changes a stable engineering rule or tooling lesson, update `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` in the same task.
-13. If the task affects release content, update `/Users/liutao/workspace/kimijb/CHANGELOG.md` and keep release notes user-facing rather than implementation-heavy.
+2. For product work, check `/Users/liutao/workspace/kimijb/docs/backlog.md` first and align the task with the relevant backlog item, target version, and acceptance criteria. If the request is a new product idea, add it to the backlog before implementation unless the user says not to.
+3. For any non-trivial task, read `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` before choosing an implementation.
+4. Start development on a dedicated branch instead of working directly on `main`. Treat `main` as the protected release branch.
+5. Name development branches clearly for the task. If Codex creates the branch itself, use the required `codex/` prefix.
+6. Keep execution narrow: one task, one branch, and one primary goal at a time. Do not mix unrelated product changes in the same implementation pass.
+7. Find the smallest change that solves the user request without widening scope.
+8. Use TDD as the default development method. When behavior changes, add or update tests first, make them fail for the intended reason, then implement until they pass.
+9. Implement in small steps and preserve existing plugin goals unless the user explicitly changes them.
+10. Run `./gradlew test` after every coding change. Do not hand off with failing tests.
+11. Run `./gradlew buildPlugin` when packaging, installability, or release confidence matters.
+12. Merge finished work back into `main` only after tests are green and the branch is ready to release or integrate.
+13. Use rebase merge when integrating a branch into `main`. Do not use squash merge or merge commits unless the user explicitly overrides that rule for a specific case.
+14. If the task changes a stable engineering rule or tooling lesson, update `/Users/liutao/workspace/kimijb/docs/lessons-learned.md` in the same task.
+15. If the task affects release content, update `/Users/liutao/workspace/kimijb/CHANGELOG.md` and keep release notes user-facing rather than implementation-heavy.
+16. If the task is tied to a backlog item, update that item's status or notes when the implementation meaningfully changes its progress.
 
 TDD expectation:
 
@@ -35,6 +38,7 @@ Code management expectation:
 - Protect `main` in the remote repository and require branch-based integration.
 - Do daily feature work on short-lived task branches, then merge back into `main` after review and validation.
 - Default to rebase merge for branch integration so history stays linear without squash rewriting.
+- Keep each branch scoped to a single task and a single main outcome so reviews, releases, and rollback decisions stay obvious.
 - Keep commits focused so merge history stays understandable for release and rollback decisions.
 
 Respect these invariants:
@@ -54,6 +58,7 @@ Use these files as the primary map:
 - Option+K action: `/Users/liutao/workspace/kimijb/src/main/kotlin/com/github/kimijb/action/KimiInsertContextAction.kt`
 - Project service: `/Users/liutao/workspace/kimijb/src/main/kotlin/com/github/kimijb/service/KimiProjectService.kt`
 - Plugin declarations and shortcuts: `/Users/liutao/workspace/kimijb/src/main/resources/META-INF/plugin.xml`
+- Product backlog: `/Users/liutao/workspace/kimijb/docs/backlog.md`
 - Release workflow: `/Users/liutao/workspace/kimijb/docs/release.md`
 - Release notes source: `/Users/liutao/workspace/kimijb/CHANGELOG.md`
 
