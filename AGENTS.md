@@ -83,6 +83,7 @@ Recommended packaging check:
 - Prioritize GoLand compatibility while staying IntelliJ-platform friendly.
 - Always consider GUI-launched IDE environment differences (`PATH`, shell env).
 - When behavior changes, add/update tests accordingly.
+- Write changelog / change-notes for ordinary users first. Prefer user-visible outcomes and avoid low-level implementation detail unless it changes user expectations.
 
 ## 7. Learn and Record User Preferences (Mandatory)
 
@@ -98,3 +99,4 @@ Record format:
 ## 8. User Preference Log
 
 - 2026-03-03: User prefers conservative versioning and requested `0.0.x` starting point (source: explicit request to use `0.0.1`).
+- 2026-03-10: User wants changelog / change-notes written for ordinary users, not implementation-heavy release notes (source: explicit request).
