@@ -17,6 +17,7 @@ This project publishes to two destinations:
 ## Versioning Rules
 
 - Update `version` in `build.gradle`
+- Add a matching top entry in `CHANGELOG.md` for the target version. The build injects this entry into Marketplace `change-notes` automatically.
 - Create a tag in the format `vX.Y.Z`
 - The release workflow validates that tag version equals `build.gradle` version
 
@@ -47,16 +48,17 @@ The job uses `environment: production`, so release requires manual approval firs
 
 1. Ensure main branch is green on CI
 2. Bump version in `build.gradle`
-3. Commit and push
-4. Create and push tag:
+3. Add/update the matching `CHANGELOG.md` entry
+4. Commit and push
+5. Create and push tag:
 
 ```bash
 git tag v0.0.2
 git push origin v0.0.2
 ```
 
-5. Approve production deployment in GitHub Actions
-6. Confirm both destinations:
+6. Approve production deployment in GitHub Actions
+7. Confirm both destinations:
 - Marketplace plugin update visible
 - GitHub Release created with signed ZIP
 

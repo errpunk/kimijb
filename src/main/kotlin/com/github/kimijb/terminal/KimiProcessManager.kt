@@ -2,21 +2,36 @@ package com.github.kimijb.terminal
 
 import com.pty4j.PtyProcessBuilder
 import com.intellij.openapi.diagnostic.Logger
+import com.jediterm.terminal.TtyConnector
+import java.util.concurrent.TimeUnit
 
 open class KimiProcessManager {
 
     private val LOG = Logger.getInstance(KimiProcessManager::class.java)
 
-    fun start(workDir: String, kimiCommand: String = "kimi"): KimiProcess {
-        LOG.info("Starting kimi process: cmd='$kimiCommand', workDir='$workDir'")
+    fun start(
+        workDir: String,
+        kimiCommand: String = "kimi",
+        initialColumns: Int? = null,
+        initialRows: Int? = null
+    ): KimiProcess {
+        return start(workDir, listOf(kimiCommand), initialColumns, initialRows)
+    }
+
+    fun start(
+        workDir: String,
+        command: List<String>,
+        initialColumns: Int? = null,
+        initialRows: Int? = null
+    ): KimiProcess {
+        LOG.info("Starting kimi process: cmd='${command.joinToString(" ")}', workDir='$workDir'")
         try {
-            val command = arrayOf(kimiCommand)
             val env = createTerminalEnvironment()
-            val process = startPtyProcess(command, workDir, env)
+            val process = startPtyProcess(command.toTypedArray(), workDir, env, initialColumns, initialRows)
             LOG.info("Kimi process started successfully, pid=${process.pid()}")
             return KimiProcess(process, workDir)
         } catch (e: Exception) {
-            LOG.error("Failed to start kimi process: cmd='$kimiCommand', workDir='$workDir'", e)
+            LOG.error("Failed to start kimi process: cmd='${command.joinToString(" ")}', workDir='$workDir'", e)
             throw e
         }
     }
@@ -24,13 +39,17 @@ open class KimiProcessManager {
     internal open fun startPtyProcess(
         command: Array<String>,
         workDir: String,
-        environment: Map<String, String>
+        environment: Map<String, String>,
+        initialColumns: Int?,
+        initialRows: Int?
     ): Process {
-        return PtyProcessBuilder(command)
+        val builder = PtyProcessBuilder(command)
             .setDirectory(workDir)
             .setEnvironment(environment)
             .setRedirectErrorStream(true)
-            .start()
+        initialColumns?.let { builder.setInitialColumns(it) }
+        initialRows?.let { builder.setInitialRows(it) }
+        return builder.start()
     }
 
     internal open fun baseEnvironment(): Map<String, String> = System.getenv()
@@ -93,6 +112,33 @@ open class KimiProcessManager {
     fun stop(process: KimiProcess) {
         LOG.info("Stopping kimi process, pid=${process.process.pid()}, alive=${process.process.isAlive}")
         process.process.destroy()
+    }
+
+    fun stopGracefully(
+        process: KimiProcess,
+        ttyConnector: TtyConnector?,
+        timeoutMillis: Long = 1500
+    ) {
+        LOG.info("Stopping kimi process gracefully, pid=${process.process.pid()}, alive=${process.process.isAlive}")
+        if (!process.process.isAlive) {
+            return
+        }
+
+        try {
+            ttyConnector?.write("\u0004")
+            if (process.process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
+                return
+            }
+
+            ttyConnector?.write("/exit\n")
+            if (process.process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
+                return
+            }
+        } catch (e: Exception) {
+            LOG.warn("Graceful kimi shutdown failed, falling back to destroy()", e)
+        }
+
+        stop(process)
     }
 
     fun isRunning(process: KimiProcess): Boolean {

@@ -4,7 +4,49 @@ plugins {
 }
 
 group = 'com.github.kimijb'
-version = '0.0.3'
+version = '0.0.4'
+
+def changelogFile = file('CHANGELOG.md')
+
+def readLatestChangeNotes = {
+    if (!changelogFile.exists()) {
+        throw new GradleException("CHANGELOG.md not found")
+    }
+
+    def lines = changelogFile.readLines('UTF-8')
+    def headerPattern = ~/^## \[(.+)] - .+$/
+    def headerIndex = lines.findIndexOf { it ==~ headerPattern }
+    if (headerIndex < 0) {
+        throw new GradleException("Could not parse latest release notes from CHANGELOG.md")
+    }
+
+    def headerMatcher = (lines[headerIndex] =~ headerPattern)
+    headerMatcher.matches()
+    def versionHeader = headerMatcher.group(1)
+    if (versionHeader != version) {
+        throw new GradleException("Latest CHANGELOG.md entry (${versionHeader}) does not match project version (${version})")
+    }
+
+    def bodyLines = lines.subList(headerIndex + 1, lines.size())
+    def nextHeaderIndex = bodyLines.findIndexOf { it.startsWith('## [') }
+    if (nextHeaderIndex >= 0) {
+        bodyLines = bodyLines.subList(0, nextHeaderIndex)
+    }
+
+    return bodyLines.join('\n').trim()
+        .readLines()
+        .collect { line ->
+            if (line.startsWith('- ')) {
+                "<li>${line.substring(2).trim()}</li>"
+            } else if (line.isBlank()) {
+                ""
+            } else {
+                line.trim()
+            }
+        }
+        .findAll { !it.isEmpty() }
+        .join('\n')
+}
 
 repositories {
     mavenCentral()
@@ -29,18 +71,23 @@ intellijPlatform {
     pluginConfiguration {
         id = 'com.github.kimijb'
         name = 'Kimi JB'
-        version = '0.0.3'
+        version = '0.0.4'
         description = '''
             <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
             <ul>
                 <li>Provides a dedicated <b>Kimi</b> tool window for daily coding workflows.</li>
                 <li>Supports <b>Option+K</b> (macOS) to inject <code>filePath:lineNumber</code> from the active editor.</li>
-                <li>Lets users open the IDE <b>Keymap</b> page and customize the shortcut for their own workflow.</li>
+                <li>You can rebind the context shortcut later in the IDE <b>Keymap</b> settings.</li>
                 <li>Uses PTY-based terminal integration for reliable Enter/Backspace and interactive behavior.</li>
             </ul>
             <p><b>Requirements:</b> local <code>kimi-cli</code> installation (for example, <code>kimi --version</code> works in your shell).</p>
             <p><b>Compatibility:</b> JetBrains 2024.3+ (GoLand-focused).</p>
         '''.stripIndent().trim()
+        changeNotes = """
+            <ul>
+                ${readLatestChangeNotes()}
+            </ul>
+        """.stripIndent().trim()
         ideaVersion {
             sinceBuild = '243'
         }

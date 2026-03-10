@@ -1,7 +1,9 @@
 package com.github.kimijb.terminal
 
+import com.jediterm.terminal.TtyConnector
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verifyOrder
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -36,6 +38,36 @@ class KimiProcessManagerTest {
     }
 
     @Test
+    fun `stopGracefully sends ctrl d before forcing process destroy`() {
+        val ttyConnector = mockk<TtyConnector>(relaxed = true)
+        every { mockProcess.isAlive } returnsMany listOf(true, true)
+        every { mockProcess.waitFor(any<Long>(), any()) } returns false
+
+        val kimiProcess = KimiProcess(mockProcess, "/workspace")
+        manager.stopGracefully(kimiProcess, ttyConnector, timeoutMillis = 1)
+
+        verifyOrder {
+            ttyConnector.write("\u0004")
+            ttyConnector.write("/exit\n")
+            mockProcess.destroy()
+        }
+    }
+
+    @Test
+    fun `stopGracefully stops after ctrl d when process exits cleanly`() {
+        val ttyConnector = mockk<TtyConnector>(relaxed = true)
+        every { mockProcess.isAlive } returns true
+        every { mockProcess.waitFor(any<Long>(), any()) } returns true
+
+        val kimiProcess = KimiProcess(mockProcess, "/workspace")
+        manager.stopGracefully(kimiProcess, ttyConnector, timeoutMillis = 1)
+
+        verify { ttyConnector.write("\u0004") }
+        verify(exactly = 0) { ttyConnector.write("/exit\n") }
+        verify(exactly = 0) { mockProcess.destroy() }
+    }
+
+    @Test
     fun `findKimiExecutable returns null when command not found`() {
         // When kimi is not on PATH in test environment, should return null gracefully
         val result = manager.findKimiExecutable()
@@ -50,22 +82,28 @@ class KimiProcessManagerTest {
             lateinit var command: Array<String>
             lateinit var workDir: String
             lateinit var env: Map<String, String>
+            var initialColumns: Int? = null
+            var initialRows: Int? = null
 
             override fun startPtyProcess(
                 command: Array<String>,
                 workDir: String,
-                environment: Map<String, String>
+                environment: Map<String, String>,
+                initialColumns: Int?,
+                initialRows: Int?
             ): Process {
                 this.command = command
                 this.workDir = workDir
                 this.env = environment
+                this.initialColumns = initialColumns
+                this.initialRows = initialRows
                 return fakeProcess
             }
 
             override fun baseEnvironment(): Map<String, String> = emptyMap()
         }
 
-        val kimiProcess = capturingManager.start("/workspace", "/opt/homebrew/bin/kimi")
+        val kimiProcess = capturingManager.start("/workspace", "/opt/homebrew/bin/kimi", 132, 40)
 
         assertEquals(fakeProcess, kimiProcess.process)
         assertEquals("/workspace", kimiProcess.workDir)
@@ -73,6 +111,33 @@ class KimiProcessManagerTest {
         assertEquals("/workspace", capturingManager.workDir)
         assertEquals("xterm-256color", capturingManager.env["TERM"])
         assertEquals("truecolor", capturingManager.env["COLORTERM"])
+        assertEquals(132, capturingManager.initialColumns)
+        assertEquals(40, capturingManager.initialRows)
+    }
+
+    @Test
+    fun `start accepts command arguments for continued session`() {
+        val fakeProcess = mockk<Process>(relaxed = true)
+        val capturingManager = object : KimiProcessManager() {
+            lateinit var command: Array<String>
+
+            override fun startPtyProcess(
+                command: Array<String>,
+                workDir: String,
+                environment: Map<String, String>,
+                initialColumns: Int?,
+                initialRows: Int?
+            ): Process {
+                this.command = command
+                return fakeProcess
+            }
+
+            override fun baseEnvironment(): Map<String, String> = emptyMap()
+        }
+
+        capturingManager.start("/workspace", listOf("kimi", "--continue"))
+
+        assertEquals(listOf("kimi", "--continue"), capturingManager.command.toList())
     }
 
     @Test
@@ -84,7 +149,9 @@ class KimiProcessManagerTest {
             override fun startPtyProcess(
                 command: Array<String>,
                 workDir: String,
-                environment: Map<String, String>
+                environment: Map<String, String>,
+                initialColumns: Int?,
+                initialRows: Int?
             ): Process {
                 this.env = environment
                 return fakeProcess

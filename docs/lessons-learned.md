@@ -23,4 +23,14 @@ If runtime code references classes from bundled JetBrains plugins (for example `
 
 ## Shortcut Customization
 
-For JetBrains actions, prefer reusing the IDE `Keymap` settings instead of building plugin-local shortcut storage. A small helper action that opens `ShowSettingsUtil` on `KeymapPanel` and preselects the plugin action gives users a native customization flow while keeping shortcut persistence aligned with the IDE.
+For JetBrains actions, prefer reusing the IDE `Keymap` settings instead of building plugin-local shortcut storage. If users need a different shortcut, documenting where the action appears in `Settings | Keymap` is often enough and avoids adding extra UI surface that does not expand actual capability.
+
+## Terminal Startup Sizing
+
+If a CLI adjusts its startup layout from PTY size, do not rely on a single `invokeLater` to make terminal dimensions available. Wait until the embedded terminal component reports a positive measured size, then pass those columns and rows into `PtyProcessBuilder` as the initial PTY size.
+
+Tool-window scoped actions such as layout refit belong in the tool window gear menu. That keeps terminal content uncluttered and lets session restarts reuse the same startup path, including any PTY sizing logic.
+
+## Marketplace Change Notes
+
+Keep Marketplace release notes in a repository file instead of retyping them in the Marketplace UI. Wiring the latest `CHANGELOG.md` entry into Gradle `pluginConfiguration.changeNotes` makes versioned release notes reviewable in PRs and keeps IDE "What's New" content consistent with published releases.

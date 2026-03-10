@@ -8,7 +8,7 @@ Chinese version: [README.zh-CN.md](./README.zh-CN.md)
 
 1. A `Kimi` Tool Window with an interactive terminal running `kimi`.
 2. `Option+K` shortcut (macOS) that injects the current file path and cursor line into the `kimi` input context.
-3. A `Configure Kimi Shortcut` action under `Tools` that opens `Settings | Keymap` so users can assign their own shortcut.
+3. The shortcut can be rebound later in `Settings | Keymap` if `Option+K` does not fit your workflow.
 
 ## Goals
 
@@ -43,7 +43,8 @@ Output:
 1. Open the `Kimi` tool window on the right side.
 2. Interact with `kimi` directly in the embedded terminal.
 3. Press `Option+K` in an editor to inject `filePath:lineNumber` context.
-4. If you want a different shortcut, run `Tools | Configure Kimi Shortcut` and rebind `Insert Kimi Context` in the IDE keymap.
+4. If you want a different shortcut, open `Settings | Keymap`, search for `Insert Kimi Context`, and assign your preferred shortcut.
+5. Use the `Refit Layout` button in the tool window title bar if you resize the panel and want `kimi` to reflow against the current width.
 
 ## Development
 

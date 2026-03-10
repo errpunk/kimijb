@@ -21,13 +21,15 @@ class KimiToolWindowFactory : ToolWindowFactory {
 
         project.service<KimiProjectService>().registerPanel(panel)
         LOG.info("Panel registered to KimiProjectService")
-
-        val workDir = project.basePath ?: System.getProperty("user.home")
-        LOG.info("Starting kimi process, workDir=$workDir")
-        panel.startProcess(workDir)
+        toolWindow.setTitleActions(listOf(RefitLayoutAction(panel)))
 
         val content = ContentFactory.getInstance().createContent(component, "", false)
         toolWindow.contentManager.addContent(content)
+
+        val workDir = project.basePath ?: System.getProperty("user.home")
+        LOG.info("Scheduling kimi startup, workDir=$workDir")
+        panel.startProcessWhenReady(workDir)
+
         LOG.info("Kimi Tool Window created successfully")
     }
 }
