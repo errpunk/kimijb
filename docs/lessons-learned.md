@@ -20,3 +20,7 @@ When embedding terminal UI in a JetBrains plugin, prefer `com.intellij.terminal.
 Keep a safe fallback (`JediTermWidget` + `DefaultSettingsProvider`) for headless/unit-test contexts where full IDE application services may be unavailable.
 
 If runtime code references classes from bundled JetBrains plugins (for example `org.jetbrains.plugins.terminal`), declare matching `<depends>` entries in `META-INF/plugin.xml`. Gradle `bundledPlugin` alone is not enough for plugin classloader resolution at runtime.
+
+## Shortcut Customization
+
+For JetBrains actions, prefer reusing the IDE `Keymap` settings instead of building plugin-local shortcut storage. A small helper action that opens `ShowSettingsUtil` on `KeymapPanel` and preselects the plugin action gives users a native customization flow while keeping shortcut persistence aligned with the IDE.

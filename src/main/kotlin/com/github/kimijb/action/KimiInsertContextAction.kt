@@ -15,18 +15,18 @@ class KimiInsertContextAction : DumbAwareAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: run {
-            LOG.warn("Option+K triggered but no project available")
+            LOG.warn("Kimi context shortcut triggered but no project available")
             return
         }
         val editor = e.getData(CommonDataKeys.EDITOR) ?: run {
-            LOG.warn("Option+K triggered but no editor available")
+            LOG.warn("Kimi context shortcut triggered but no editor available")
             return
         }
 
         val filePath = ContextExtractor.extractFilePath(editor)
         val lineNumber = ContextExtractor.extractLineNumber(editor)
 
-        LOG.info("Option+K triggered: filePath=$filePath, lineNumber=$lineNumber")
+        LOG.info("Kimi context shortcut triggered: filePath=$filePath, lineNumber=$lineNumber")
         project.service<KimiProjectService>().insertContext(filePath, lineNumber)
     }
 

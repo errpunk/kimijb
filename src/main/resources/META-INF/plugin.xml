@@ -7,6 +7,7 @@
         <ul>
             <li>Provides a dedicated <b>Kimi</b> tool window for daily coding workflows.</li>
             <li>Supports <b>Option+K</b> (macOS) to inject <code>filePath:lineNumber</code> from the active editor.</li>
+            <li>Provides a <b>Configure Kimi Shortcut</b> action so users can rebind the shortcut in the IDE keymap.</li>
             <li>Uses PTY-based terminal integration for reliable Enter/Backspace and interactive behavior.</li>
         </ul>
         <p><b>Requirements:</b> local <code>kimi-cli</code> installation (for example, <code>kimi --version</code> works in your shell).</p>
@@ -30,6 +31,12 @@
                 description="Insert current file path and cursor line into Kimi panel">
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt K"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt K"/>
+        </action>
+        <action id="com.github.kimijb.ConfigureShortcut"
+                class="com.github.kimijb.action.KimiConfigureShortcutAction"
+                text="Configure Kimi Shortcut"
+                description="Open Keymap settings and customize the Kimi context shortcut">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>
