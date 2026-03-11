@@ -22,7 +22,7 @@ Recommended item fields:
 
 ### BL-001 Welcome Screen Empty State
 
-- Status: `todo`
+- Status: `done`
 - Priority: `high`
 - Target version: `0.0.5`
 - Summary: Do not start `kimi` on the GoLand welcome screen. Show a clear empty state instead.

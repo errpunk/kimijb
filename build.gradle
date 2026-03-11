@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.github.kimijb'
-version = '0.0.4'
+version = '0.0.5'
 
 def changelogFile = file('CHANGELOG.md')
 
@@ -71,7 +71,7 @@ intellijPlatform {
     pluginConfiguration {
         id = 'com.github.kimijb'
         name = 'Kimi JB'
-        version = '0.0.4'
+        version = '0.0.5'
         description = '''
             <p>Run <code>kimi-cli</code> directly inside GoLand with an embedded interactive terminal.</p>
             <ul>

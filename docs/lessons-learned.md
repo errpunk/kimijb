@@ -34,3 +34,11 @@ Tool-window scoped actions such as layout refit belong in the tool window gear m
 ## Marketplace Change Notes
 
 Keep Marketplace release notes in a repository file instead of retyping them in the Marketplace UI. Wiring the latest `CHANGELOG.md` entry into Gradle `pluginConfiguration.changeNotes` makes versioned release notes reviewable in PRs and keeps IDE "What's New" content consistent with published releases.
+
+## Welcome Screen Guard
+
+JetBrains tool windows can still be instantiated against the IDE default project on the welcome screen. For terminal-like integrations, treat `project.isDefault` as a hard guard and render a readable empty state instead of starting external processes in that placeholder context.
+
+## Refit Session Restore
+
+Do not assume a terminal resize or refit action always has a resumable CLI session behind it. For `kimi --continue`, the CLI can exit immediately when the working directory has no previous session yet, so refit flows should degrade back to a normal startup instead of leaving the panel dead.
