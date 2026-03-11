@@ -26,10 +26,17 @@ class KimiToolWindowFactory : ToolWindowFactory {
         val content = ContentFactory.getInstance().createContent(component, "", false)
         toolWindow.contentManager.addContent(content)
 
-        val workDir = project.basePath ?: System.getProperty("user.home")
-        LOG.info("Scheduling kimi startup, workDir=$workDir")
-        panel.startProcessWhenReady(workDir)
+        if (shouldStartTerminal(project)) {
+            val workDir = project.basePath ?: System.getProperty("user.home")
+            LOG.info("Scheduling kimi startup, workDir=$workDir")
+            panel.startProcessWhenReady(workDir)
+        } else {
+            LOG.info("Skipping kimi startup for default welcome-screen project")
+            panel.showWelcomeScreenEmptyState()
+        }
 
         LOG.info("Kimi Tool Window created successfully")
     }
+
+    internal fun shouldStartTerminal(project: Project): Boolean = !project.isDefault
 }

@@ -109,3 +109,4 @@ Record format:
 - 2026-03-10: User wants `main` treated as the protected release branch, with day-to-day development on short-lived branches that merge back into `main` (source: explicit request).
 - 2026-03-10: User wants branch integration into `main` to default to rebase merge rather than squash merge or merge commits (source: explicit request).
 - 2026-03-10: User wants work kept to one task, one branch, and one primary goal at a time to reduce AI scope drift (source: explicit request).
+- 2026-03-11: User wants user-facing welcome-state copy to stay JetBrains-IDE-generic and avoid GoLand-specific wording when the behavior applies across IDEs (source: explicit request).

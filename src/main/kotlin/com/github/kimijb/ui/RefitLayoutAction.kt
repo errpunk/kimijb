@@ -9,14 +9,14 @@ class RefitLayoutAction(
     private val panel: KimiTerminalPanel
 ) : DumbAwareAction(
     "Refit Layout",
-    "Restart kimi with --continue to fit the current panel width",
+    "Restart kimi to fit the current panel width and resume the previous session when available",
     KimiIcons.REFIT_LAYOUT
 ) {
 
     private val log = Logger.getInstance(RefitLayoutAction::class.java)
 
     override fun actionPerformed(e: AnActionEvent) {
-        log.info("Refitting kimi layout with --continue")
+        log.info("Refitting kimi layout and resuming the previous session when available")
         panel.refitLayout()
     }
 
