@@ -240,6 +240,8 @@ class KimiTerminalPanel(private val project: Project) : Disposable {
             runtimeMillis <= CONTINUE_FAILURE_FALLBACK_WINDOW_MILLIS
     }
 
+    internal fun formatInsertedContext(text: String): String = "$text "
+
     private fun startProcessWithCommand(
         workDir: String,
         command: List<String>,
@@ -381,6 +383,16 @@ class KimiTerminalPanel(private val project: Project) : Disposable {
 
     fun appendInputText(text: String) {
         currentTtyConnector?.write(" " + text)
+    }
+
+    fun focusInput() {
+        if (!::terminalWidget.isInitialized) {
+            return
+        }
+        SwingUtilities.invokeLater {
+            showTerminal()
+            terminalWidget.terminalPanel.requestFocusInWindow()
+        }
     }
 
     override fun dispose() {

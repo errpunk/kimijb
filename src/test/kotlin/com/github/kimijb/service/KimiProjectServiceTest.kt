@@ -2,6 +2,7 @@ package com.github.kimijb.service
 
 import com.github.kimijb.ui.KimiTerminalPanel
 import com.intellij.openapi.project.Project
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,6 +20,7 @@ class KimiProjectServiceTest {
     @BeforeEach
     fun setup() {
         service = KimiProjectService(mockProject)
+        every { mockPanel.formatInsertedContext(any()) } answers { firstArg<String>() + " " }
     }
 
     @Test
@@ -43,7 +45,8 @@ class KimiProjectServiceTest {
     fun `insertContext calls setInputText when panel registered`() {
         service.registerPanel(mockPanel)
         service.insertContext("a.go", 5)
-        verify { mockPanel.setInputText("@a.go:5") }
+        verify { mockPanel.setInputText("@a.go:5 ") }
+        verify { mockPanel.focusInput() }
     }
 
     @Test
@@ -53,9 +56,10 @@ class KimiProjectServiceTest {
     }
 
     @Test
-    fun `insertContext with null filePath does not call setInputText`() {
+    fun `insertContext with null filePath focuses panel without inserting text`() {
         service.registerPanel(mockPanel)
         service.insertContext(null, 5)
         verify(exactly = 0) { mockPanel.setInputText(any()) }
+        verify { mockPanel.focusInput() }
     }
 }

@@ -42,3 +42,28 @@ Recommended item fields:
 - Notes:
   - Prefer a real project-context check such as `project.isDefault` and project availability signals.
   - Avoid brittle path-based heuristics for IDE-managed placeholder workspaces.
+
+### BL-002 Option+K Trailing Space And Caret Placement
+
+- Status: `doing`
+- Priority: `medium`
+- Target version: `0.0.6`
+- Summary: When `Option+K` inserts file context into the Kimi panel, append a trailing space after the inserted context and leave the input caret after that space.
+- Problem:
+  - Today `Option+K` inserts the file context, but the follow-up typing position does not align with the inserted path in a natural input flow.
+  - Without a trailing space after the inserted context, the next typed text runs directly against `@filePath` or `@filePath:lineNumber`.
+  - If the current editor context cannot provide a file path, `Option+K` currently has no useful fallback behavior in the Kimi panel.
+- Desired behavior:
+  - Triggering `Option+K` should insert the context in the form `@filePath ` or `@filePath:lineNumber `.
+  - After insertion, the terminal input caret should remain immediately after the trailing space so the user can keep typing naturally.
+  - The behavior should work both when only the file path is available and when `filePath:lineNumber` is available.
+  - If the file path cannot be resolved, `Option+K` should still move focus to the Kimi panel and place the input caret there so the shortcut remains useful.
+- Acceptance criteria:
+  - Triggering `Option+K` inserts context with one trailing space after `@filePath` or `@filePath:lineNumber`.
+  - After insertion, the input caret is positioned after that trailing space, ready for continued typing.
+  - The resulting text remains correctly formatted for both `@filePath` and `@filePath:lineNumber`.
+  - If no file path can be extracted, the shortcut still focuses the Kimi panel and leaves the input caret ready for typing without inserting broken context text.
+  - Existing context extraction behavior remains unchanged outside the insertion formatting and caret placement.
+- Notes:
+  - The trailing space is part of the inserted context format and should be inserted consistently with the file context text.
+  - Prefer implementing caret placement in the terminal input path itself instead of relying on timing-sensitive synthetic key events.

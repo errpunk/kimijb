@@ -22,16 +22,18 @@ class KimiProjectService(private val project: Project) {
     fun insertContext(filePath: String?, lineNumber: Int?) {
         val text = ContextExtractor.formatContextText(filePath, lineNumber)
         LOG.info("Inserting context: formattedText='$text', filePath=$filePath, lineNumber=$lineNumber")
-        if (text.isEmpty()) {
-            LOG.warn("Formatted context is empty, nothing to insert")
-            return
-        }
         val panel = panel
         if (panel == null) {
             LOG.warn("Cannot insert context: panel is null (Tool Window may not be opened yet)")
             return
         }
-        panel.setInputText(text)
+        if (text.isEmpty()) {
+            LOG.warn("Formatted context is empty, focusing panel without insertion")
+            panel.focusInput()
+            return
+        }
+        panel.setInputText(panel.formatInsertedContext(text))
+        panel.focusInput()
         LOG.info("Context inserted successfully")
     }
 }
