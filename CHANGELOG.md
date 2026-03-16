@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.6] - 2026-03-16
+
+- Updated `Option+K` to insert file context with a trailing space so you can keep typing naturally right after the inserted path.
+- Made `Option+K` refocus the Kimi input after insertion so the typing cursor stays ready in the plugin.
+- Added a fallback for missing file paths so `Option+K` still focuses the Kimi input even when no valid path can be inserted.
+
 ## [0.0.5] - 2026-03-11
 
 - Stopped launching `kimi` from the JetBrains IDE welcome screen, so the tool window no longer attaches to an IDE placeholder workspace.

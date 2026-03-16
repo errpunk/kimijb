@@ -44,6 +44,11 @@ class KimiTerminalPanelTest {
     }
 
     @Test
+    fun `formatInsertedContext appends trailing space`() {
+        assertEquals("@a.go:5 ", panel.formatInsertedContext("@a.go:5"))
+    }
+
+    @Test
     fun `continue refit falls back to fresh session when kimi exits quickly with missing-session code`() {
         assertEquals(
             true,

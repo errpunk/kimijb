@@ -39,11 +39,12 @@ Terminal implementation constraints (do not regress):
 
 Default sequence:
 1. Read `README.md` and this file.
-2. If the task is a product change or new feature, read `docs/backlog.md` and align the work with the relevant backlog item, target version, and acceptance criteria.
-3. Inspect relevant code/tests and define minimum-change scope.
-4. Implement in small, verifiable steps.
-5. Fix reproducible issues first, then optimize.
-6. Validate against goals before finishing.
+2. Before starting any code change, create or switch to a short-lived task branch. Do not start implementation work directly on `main`.
+3. If the task is a product change or new feature, read `docs/backlog.md` and align the work with the relevant backlog item, target version, and acceptance criteria.
+4. Inspect relevant code/tests and define minimum-change scope.
+5. Implement in small, verifiable steps.
+6. Fix reproducible issues first, then optimize.
+7. Validate against goals before finishing.
 
 Execution rule:
 - Continue until task completion unless blocked by external dependency, unresolved architecture decision, or hard technical blocker.
@@ -110,3 +111,4 @@ Record format:
 - 2026-03-10: User wants branch integration into `main` to default to rebase merge rather than squash merge or merge commits (source: explicit request).
 - 2026-03-10: User wants work kept to one task, one branch, and one primary goal at a time to reduce AI scope drift (source: explicit request).
 - 2026-03-11: User wants user-facing welcome-state copy to stay JetBrains-IDE-generic and avoid GoLand-specific wording when the behavior applies across IDEs (source: explicit request).
+- 2026-03-16: User wants every development task to start on a newly created short-lived branch instead of beginning work on the current branch (source: explicit request).

@@ -74,6 +74,22 @@ class KimiInsertContextActionTest {
     }
 
     @Test
+    fun `actionPerformed still delegates when file path cannot be extracted`() {
+        every { mockService.getPanel() } returns mockPanel
+        every { mockProject.getService(KimiProjectService::class.java) } returns mockService
+        every { mockEditor.virtualFile } returns null
+
+        val event = mockk<AnActionEvent> {
+            every { project } returns mockProject
+            every { getData(CommonDataKeys.EDITOR) } returns mockEditor
+        }
+
+        action.actionPerformed(event)
+
+        verify { mockService.insertContext(null, 3) }
+    }
+
+    @Test
     fun `actionPerformed does nothing when no editor`() {
         every { mockProject.getService(KimiProjectService::class.java) } returns mockService
 
